@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 global $woocommerce;
 ?>
 
-<?php $woocommerce->show_messages(); ?>
+<?php wc_print_messages(); ?>
 
 <form action="<?php echo esc_url( get_permalink(woocommerce_get_page_id('change_password')) ); ?>" method="post">
 
@@ -28,7 +28,7 @@ global $woocommerce;
 
 	<p><input type="submit" class="button" name="change_password" value="<?php _e( 'Save', 'woocommerce' ); ?>" /></p>
 
-	<?php $woocommerce->nonce_field('change_password')?>
+	<?php wp_nonce_field( 'woocommerce-change_password')?>
 	<input type="hidden" name="action" value="change_password" />
 
 </form>

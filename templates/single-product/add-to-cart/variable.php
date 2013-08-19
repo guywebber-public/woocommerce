@@ -14,12 +14,12 @@ global $woocommerce, $product, $post;
 
 <?php do_action('woocommerce_before_add_to_cart_form'); ?>
 
-<form action="<?php echo esc_url( $product->add_to_cart_url() ); ?>" class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo $post->ID; ?>" data-product_variations="<?php echo esc_attr( json_encode( $available_variations ) ) ?>">
+<form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo $post->ID; ?>" data-product_variations="<?php echo esc_attr( json_encode( $available_variations ) ) ?>">
 	<table class="variations" cellspacing="0">
 		<tbody>
 			<?php $loop = 0; foreach ( $attributes as $name => $options ) : $loop++; ?>
 				<tr>
-					<td class="label"><label for="<?php echo sanitize_title($name); ?>"><?php echo $woocommerce->attribute_label( $name ); ?></label></td>
+					<td class="label"><label for="<?php echo sanitize_title($name); ?>"><?php echo $woocommerce->get_helper( 'attribute' )->attribute_label( $name ); ?></label></td>
 					<td class="value"><select id="<?php echo esc_attr( sanitize_title($name) ); ?>" name="attribute_<?php echo sanitize_title($name); ?>">
 						<option value=""><?php echo __( 'Choose an option', 'woocommerce' ) ?>&hellip;</option>
 						<?php
@@ -33,7 +33,7 @@ global $woocommerce, $product, $post;
 								// Get terms if this is a taxonomy - ordered
 								if ( taxonomy_exists( $name ) ) {
 
-									$orderby = $woocommerce->attribute_orderby( $name );
+									$orderby = $woocommerce->get_helper( 'attribute' )->attribute_orderby( $name );
 
 									switch ( $orderby ) {
 										case 'name' :
@@ -83,7 +83,10 @@ global $woocommerce, $product, $post;
 			<button type="submit" class="single_add_to_cart_button button alt"><?php echo apply_filters('single_add_to_cart_text', __( 'Add to cart', 'woocommerce' ), $product->product_type); ?></button>
 		</div>
 	</div>
-	<div><input type="hidden" name="product_id" value="<?php echo esc_attr( $post->ID ); ?>" /></div>
+	<div>
+		<input type="hidden" name="add-to-cart" value="<?php echo $product->id; ?>" />
+		<input type="hidden" name="product_id" value="<?php echo esc_attr( $post->ID ); ?>" />
+	</div>
 
 	<?php do_action('woocommerce_after_add_to_cart_button'); ?>
 

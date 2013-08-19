@@ -16,9 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	/**
 	 * woocommerce_before_single_product hook
 	 *
-	 * @hooked woocommerce_show_messages - 10
+	 * @hooked wc_print_messages - 10
 	 */
 	 do_action( 'woocommerce_before_single_product' );
+
+	 if ( post_password_required() ) {
+	 	echo get_the_password_form();
+	 	return;
+	 }
 ?>
 
 <div itemscope itemtype="http://schema.org/Product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>

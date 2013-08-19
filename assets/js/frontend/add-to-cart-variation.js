@@ -37,7 +37,7 @@
         this.find('.variations select').unbind( 'change focusin' );
 
         // Bind events
-        return this
+        $form = this
 
 				// On clicking the reset variation button
 				.on( 'click', '.reset_variations', function( event ) {
@@ -157,7 +157,7 @@
 			            	if ( ! focus )
 			            		$variation_form.trigger( 'reset_image' );
 
-			            	alert( woocommerce_params.i18n_no_matching_variations_text );
+			            	alert( wc_add_to_cart_variation_params.i18n_no_matching_variations_text );
 
 			            }
 
@@ -197,15 +197,15 @@
 					var o_title 		= $product_img.attr('data-o_title');
 			        var o_href 			= $product_link.attr('data-o_href');
 
-			        if ( o_src ) {
+			        if ( o_src != undefined ) {
 				        $product_img
 				        	.attr( 'src', o_src );
 			        }
-			        if ( o_href ) {
+			        if ( o_href != undefined ) {
 			            $product_link
 			            	.attr( 'href', o_href );
 			        }
-			        if ( o_title ) {
+			        if ( o_title != undefined ) {
 				        $product_img
 				        	.attr( 'alt', o_title )
 				        	.attr( 'title', o_title );
@@ -258,7 +258,7 @@
 					                    	attr_val = attr_val.replace(/'/g, "\\'");
 					                    	attr_val = attr_val.replace(/"/g, "\\\"");
 
-					                    	// Compare the meercat
+					                    	// Compare the meerkat
 					                    	current_attr_select.find('option[value="' + attr_val + '"]').addClass('active');
 
 					                    } else {
@@ -298,23 +298,23 @@
 			        var o_href 			= $product_link.attr('data-o_href');
 
 			        var variation_image = variation.image_src;
-			        var variation_link = variation.image_link;
+			        var variation_link  = variation.image_link;
 					var variation_title = variation.image_title;
 
 					$variation_form.find('.variations_button').show();
 			        $variation_form.find('.single_variation').html( variation.price_html + variation.availability_html );
 
-			        if ( ! o_src ) {
+			        if ( o_src == undefined ) {
 			        	o_src = ( ! $product_img.attr('src') ) ? '' : $product_img.attr('src');
 			            $product_img.attr('data-o_src', o_src );
 			        }
 
-			        if ( ! o_href ) {
+			        if ( o_href == undefined ) {
 			        	o_href = ( ! $product_link.attr('href') ) ? '' : $product_link.attr('href');
 			            $product_link.attr('data-o_href', o_href );
 			        }
 
-			        if ( ! o_title ) {
+			        if ( o_title == undefined ) {
 			        	o_title = ( ! $product_img.attr('title') ) ? '' : $product_img.attr('title');
 			            $product_img.attr('data-o_title', o_title );
 			        }
@@ -394,9 +394,14 @@
 			        $single_variation_wrap.slideDown('200').trigger( 'show_variation', [ variation ] );
 
 				});
+
+		$form.trigger('wc_variation_form');
+		return $form;
     };
 
-    $('form.variations_form').wc_variation_form();
-    $('form.variations_form .variations select').change();
+    $(function() {
+    	$('form.variations_form').wc_variation_form();
+   		$('form.variations_form .variations select').change();
+    });
 
 })( jQuery, window, document );

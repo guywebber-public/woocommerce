@@ -35,48 +35,58 @@ $order = new WC_Order( $order_id );
 	</tfoot>
 	<tbody>
 		<?php
-		if (sizeof($order->get_items())>0) {
+		if ( sizeof( $order->get_items() ) > 0 ) {
 
-			foreach($order->get_items() as $item) {
+			foreach( $order->get_items() as $item ) {
+				$_product     = apply_filters( 'woocommerce_order_item_product', $order->get_product_from_item( $item ), $item );
+				$item_meta    = new WC_Order_Item_Meta( $item['item_meta'] );
 
-				$_product = get_product( $item['variation_id'] ? $item['variation_id'] : $item['product_id'] );
+				?>
+				<tr class="<?php echo esc_attr( apply_filters( 'woocommerce_order_item_class', 'order_item', $item, $order ) ); ?>">
+					<td class="product-name">
+						<?php
+							if ( $_product && ! $_product->is_visible() )
+								echo apply_filters( 'woocommerce_order_item_name', $item['name'], $item );
+							else
+								echo apply_filters( 'woocommerce_order_item_name', sprintf( '<a href="%s">%s</a>', get_permalink( $item['product_id'] ), $item['name'] ), $item );
 
-				echo '
-					<tr class = "' . esc_attr( apply_filters( 'woocommerce_order_table_item_class', 'order_table_item', $item, $order ) ) . '">
-						<td class="product-name">' .
-							apply_filters( 'woocommerce_order_table_product_title', '<a href="' . get_permalink( $item['product_id'] ) . '">' . $item['name'] . '</a>', $item ) . ' ' .
-							apply_filters( 'woocommerce_order_table_item_quantity', '<strong class="product-quantity">&times; ' . $item['qty'] . '</strong>', $item );
+							echo apply_filters( 'woocommerce_order_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times; %s', $item['qty'] ) . '</strong>', $item );
 
-				$item_meta = new WC_Order_Item_Meta( $item['item_meta'] );
-				$item_meta->display();
+							$item_meta->display();
 
-				if ( $_product && $_product->exists() && $_product->is_downloadable() && $order->is_download_permitted() ) {
+							if ( $_product && $_product->exists() && $_product->is_downloadable() && $order->is_download_permitted() ) {
 
-					$download_file_urls = $order->get_downloadable_file_urls( $item['product_id'], $item['variation_id'], $item );
+								$download_file_urls = $order->get_downloadable_file_urls( $item['product_id'], $item['variation_id'], $item );
 
-					$i     = 0;
-					$links = array();
+								$i     = 0;
+								$links = array();
 
-					foreach ( $download_file_urls as $file_url => $download_file_url ) {
+								foreach ( $download_file_urls as $file_url => $download_file_url ) {
 
-						$filename = woocommerce_get_filename_from_url( $file_url );
+									$filename = woocommerce_get_filename_from_url( $file_url );
 
-						$links[] = '<small><a href="' . $download_file_url . '">' . sprintf( __( 'Download file%s', 'woocommerce' ), ( count( $download_file_urls ) > 1 ? ' ' . ( $i + 1 ) . ': ' : ': ' ) ) . $filename . '</a></small>';
+									$links[] = '<small><a href="' . $download_file_url . '">' . sprintf( __( 'Download file%s', 'woocommerce' ), ( count( $download_file_urls ) > 1 ? ' ' . ( $i + 1 ) . ': ' : ': ' ) ) . $filename . '</a></small>';
 
-						$i++;
-					}
+									$i++;
+								}
 
-					echo implode( '<br/>', $links );
+								echo implode( '<br/>', $links );
+							}
+						?>
+					</td>
+					<td class="product-total">
+						<?php echo $order->get_formatted_line_subtotal( $item ); ?>
+					</td>
+				</tr>
+				<?php
+
+				if ( in_array( $order->status, array( 'processing', 'completed' ) ) && ( $purchase_note = get_post_meta( $_product->id, '_purchase_note', true ) ) ) {
+					?>
+					<tr class="product-purchase-note">
+						<td colspan="3"><?php echo apply_filters( 'the_content', $purchase_note ); ?></td>
+					</tr>
+					<?php
 				}
-
-				echo '</td><td class="product-total">' . $order->get_formatted_line_subtotal( $item ) . '</td></tr>';
-
-				// Show any purchase notes
-				if ($order->status=='completed' || $order->status=='processing') {
-					if ($purchase_note = get_post_meta( $_product->id, '_purchase_note', true))
-						echo '<tr class="product-purchase-note"><td colspan="3">' . apply_filters('the_content', $purchase_note) . '</td></tr>';
-				}
-
 			}
 		}
 
@@ -84,12 +94,6 @@ $order = new WC_Order( $order_id );
 		?>
 	</tbody>
 </table>
-
-<?php if ( get_option('woocommerce_allow_customers_to_reorder') == 'yes' && $order->status=='completed' ) : ?>
-	<p class="order-again">
-		<a href="<?php echo esc_url( $woocommerce->nonce_url( 'order_again', add_query_arg( 'order_again', $order->id, add_query_arg( 'order', $order->id, get_permalink( woocommerce_get_page_id( 'view_order' ) ) ) ) ) ); ?>" class="button"><?php _e( 'Order Again', 'woocommerce' ); ?></a>
-	</p>
-<?php endif; ?>
 
 <?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 

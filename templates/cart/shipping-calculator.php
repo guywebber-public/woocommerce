@@ -27,7 +27,7 @@ if ( get_option('woocommerce_enable_shipping_calc')=='no' || ! $woocommerce->car
 			<select name="calc_shipping_country" id="calc_shipping_country" class="country_to_state" rel="calc_shipping_state">
 				<option value=""><?php _e( 'Select a country&hellip;', 'woocommerce' ); ?></option>
 				<?php
-					foreach( $woocommerce->countries->get_allowed_countries() as $key => $value )
+					foreach( $woocommerce->countries->get_shipping_countries() as $key => $value )
 						echo '<option value="' . esc_attr( $key ) . '"' . selected( $woocommerce->customer->get_shipping_country(), esc_attr( $key ), false ) . '>' . esc_html( $value ) . '</option>';
 				?>
 			</select>
@@ -84,7 +84,7 @@ if ( get_option('woocommerce_enable_shipping_calc')=='no' || ! $woocommerce->car
 
 		<p><button type="submit" name="calc_shipping" value="1" class="button"><?php _e( 'Update Totals', 'woocommerce' ); ?></button></p>
 
-		<?php $woocommerce->nonce_field('cart') ?>
+		<?php wp_nonce_field( 'woocommerce-cart') ?>
 	</section>
 </form>
 

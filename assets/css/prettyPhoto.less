@@ -7,7 +7,7 @@
 	width:16px;
 	color: #666 !important;
 	.vertical_gradient(#f6f6f6,#e8e8e8);
-	border:1px solid #ccc;
+	border:1px solid #999;
 	font-size:14px !important;
 	font-family: verdana !important;
 	text-shadow:0 1px 0 #fff;
@@ -27,13 +27,12 @@
 }
 
 // WooCommerce theme
-
 div.pp_woocommerce {
 	.pp_content_container {
 		background: #fff;
 		.border_radius(3px);
-		.box_shadow(0,1px,3px,0,rgba(0,0,0,0.25));
-		padding:60px 0 40px 0;
+		.box_shadow(0,1px,30px,0,rgba(0,0,0,0.25));
+		padding:20px 0;
 		.clearfix;
 	}
 	.pp_loaderIcon {
@@ -67,7 +66,7 @@ div.pp_woocommerce {
 	// Next / Previous
 	.pp_arrow_previous, .pp_arrow_next, .pp_previous, .pp_next {
 		&:before {
-			line-height: 1.15 !important;
+			line-height: 1.15;
 		}
 	}
 	.pp_previous, .pp_next {
@@ -202,6 +201,45 @@ div.pp_woocommerce {
 	}
 }
 
+@media only screen and (max-width: 480px) {
+	div.pp_woocommerce {
+		left: 5% !important;
+		right:5% !important;
+		.borderbox;
+		width: 90% !important;
+		.pp_gallery, .pp_previous, .pp_next, .pp_expand, .pp_contract {
+			display: none !important;
+		}
+		.pp_arrow_previous, .pp_arrow_next, .pp_close {
+			height:44px;
+			width:44px;
+			&:before {
+				font-size:2em;
+			}
+		}
+		.pp_arrow_previous, .pp_arrow_next {
+			&:before {
+				line-height: 1.45;
+			}
+		}
+		.pp_description {
+			display: none !important;
+		}
+		.pp_details {
+			width:100% !important;
+		}
+	}
+	.pp_content {
+		width:100% !important;
+		img {
+			width:100% !important;
+			height:auto !important;
+		}
+	}
+	.currentTextHolder {
+		line-height: 3;
+	}
+}
 /* ------------------------------------------------------------------------
 	DO NOT CHANGE
 ------------------------------------------------------------------------- */
@@ -209,7 +247,7 @@ div.pp_woocommerce {
 	div.pp_pic_holder a:focus { outline:none; }
 
 	div.pp_overlay {
-		background: #fff;
+		background: #000;
 		display: none;
 		left: 0;
 		position: absolute;
@@ -269,8 +307,8 @@ div.pp_woocommerce {
 			width: 100%;
 		}
 
-			.pp_content_container .pp_left { padding-left: 40px; }
-			.pp_content_container .pp_right { padding-right: 40px; }
+			.pp_content_container .pp_left { padding-left: 20px; }
+			.pp_content_container .pp_right { padding-right: 20px; }
 
 			.pp_content_container .pp_details {
 				float: left;

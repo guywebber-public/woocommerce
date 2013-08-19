@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
 	$supports_html5_storage = ( 'sessionStorage' in window && window['sessionStorage'] !== null );
 
 	$fragment_refresh = {
-		url: woocommerce_params.ajax_url,
+		url: wc_cart_fragments_params.ajax_url,
 		type: 'POST',
 		data: { action: 'woocommerce_get_refreshed_fragments' },
 		success: function( data ) {
@@ -34,8 +34,15 @@ jQuery(document).ready(function($) {
 		try {
 			var wc_fragments = $.parseJSON( sessionStorage.getItem( "wc_fragments" ) );
 			var cart_hash    = sessionStorage.getItem( "wc_cart_hash" );
+			var cookie_hash  = $.cookie( "woocommerce_cart_hash" );
 
-			if ( wc_fragments && wc_fragments['div.widget_shopping_cart_content'] && cart_hash == $.cookie( "woocommerce_cart_hash" ) ) {
+			if ( cart_hash == null || cart_hash == undefined || cart_hash == '' )
+				cart_hash = '';
+
+			if ( cookie_hash == null || cookie_hash == undefined || cookie_hash == '' )
+				cookie_hash = '';
+
+			if ( wc_fragments && wc_fragments['div.widget_shopping_cart_content'] && cart_hash == cookie_hash ) {
 
 				$.each( wc_fragments, function( key, value ) {
 					$(key).replaceWith(value);
